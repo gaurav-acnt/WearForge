@@ -58,7 +58,7 @@ const Checkout = () => {
         key: import.meta.env.VITE_RAZORPAY_KEY,
         amount: data.amount,
         currency: "INR",
-        name: "CustomWear",
+        name: "WearForge",
         description: "Custom Clothing Order",
         order_id: data.razorpayOrderId,
 

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const paymentApi = axios.create({
-  baseURL: "http://localhost:5000/api/payment",
+  baseURL: import.meta.env.PAYMENT_URL,
 });
 
 paymentApi.interceptors.request.use((config) => {
