@@ -3,63 +3,16 @@ const razorpay = require("../config/razorpay");
 const Order = require("../models/Order");
 
 
-// exports.createRazorpayOrder = async (req, res) => {
-//   try {
-//     const { productId, totalPrice } = req.body;
-
-//     if (!totalPrice || totalPrice <= 0) {
-//       return res.status(400).json({
-//         success: false,
-//         message: "Invalid total price",
-//       });
-//     }
-
-//     const order = await Order.create({
-//       userId: req.user.id,
-//       productId,
-//       totalPrice,
-//       status: "pending",
-//     });
-
-//     const razorpayOrder = await razorpay.orders.create({
-//       amount: Math.round(totalPrice * 100), 
-//       currency: "INR",
-//       receipt: `order_${order._id}`,
-//     });
-
-//     order.razorpayOrderId = razorpayOrder.id; 
-//     await order.save();
-
-//     return res.status(200).json({
-//       success: true,
-//       razorpayOrderId: razorpayOrder.id,
-//       amount: razorpayOrder.amount,
-//     });
-//   } catch (error) {
-//     console.error("Create Razorpay Order Error:", error);
-//     return res.status(500).json({
-//       success: false,
-//       message: "Payment initiation failed",
-//     });
-//   }
-// };
-
-const Product = require("../models/Product");
-
 exports.createRazorpayOrder = async (req, res) => {
   try {
-    const { productId } = req.body;
+    const { productId, totalPrice } = req.body;
 
-    const product = await Product.findById(productId);
-
-    if (!product) {
+    if (!totalPrice || totalPrice <= 0) {
       return res.status(400).json({
         success: false,
-        message: "Invalid product",
+        message: "Invalid total price",
       });
     }
-
-    const totalPrice = product.basePrice; 
 
     const order = await Order.create({
       userId: req.user.id,
@@ -69,12 +22,12 @@ exports.createRazorpayOrder = async (req, res) => {
     });
 
     const razorpayOrder = await razorpay.orders.create({
-      amount: Math.round(totalPrice * 100),
+      amount: Math.round(totalPrice * 100), 
       currency: "INR",
       receipt: `order_${order._id}`,
     });
 
-    order.razorpayOrderId = razorpayOrder.id;
+    order.razorpayOrderId = razorpayOrder.id; 
     await order.save();
 
     return res.status(200).json({
@@ -90,6 +43,8 @@ exports.createRazorpayOrder = async (req, res) => {
     });
   }
 };
+
+
 
 exports.verifyPayment = async (req, res) => {
   try {
