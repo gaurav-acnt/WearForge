@@ -43,7 +43,7 @@ const Checkout = () => {
         0
       );
 
-      const { data } = await paymentApi.post("/create-order", {
+      const { data } = await paymentApi.post("/api/orders/create-order", {
         productId,
         totalPrice,
       });
@@ -64,7 +64,7 @@ const Checkout = () => {
 
         handler: async (response) => {
           try {
-            await paymentApi.post("/verify", {
+            await paymentApi.post("/api/payment/verify", {
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
@@ -81,7 +81,7 @@ const Checkout = () => {
 
         modal: {
           ondismiss: async () => {
-            await paymentApi.post("/failed", {
+            await paymentApi.post("/api/payment/failed", {
               razorpay_order_id: data.razorpayOrderId,
               reason: "User closed payment window",
             });
