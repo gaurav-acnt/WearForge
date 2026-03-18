@@ -43,7 +43,7 @@ const Checkout = () => {
         0
       );
 
-      const { data } = await paymentApi.post("/api/orders/create-order", {
+      const { data } = await paymentApi.post("/api/payment/create-order", {
         productId,
         totalPrice,
       });
@@ -98,7 +98,7 @@ const Checkout = () => {
       const razorpay = new window.Razorpay(options);
 
       razorpay.on("payment.failed", async (response) => {
-        await paymentApi.post("/failed", {
+        await paymentApi.post("/api/payment/failed", {
           razorpay_order_id: response.error.metadata.order_id,
           reason: response.error.reason,
         });
